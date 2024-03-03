@@ -1,4 +1,10 @@
+FROM maven:amazoncorretto as build
+WORKDIR /java
+COPY . .
+RUN mvn clean install
+
 FROM openjdk:8
+WORKDIR /jarapp
+COPY --from=build /java/target/spring-boot-docker.jar spring-boot-docker.jar 
 EXPOSE 8080
-ADD target/spring-boot-docker.jar spring-boot-docker.jar 
 ENTRYPOINT ["java","-jar","/spring-boot-docker.jar"]
